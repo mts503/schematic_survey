@@ -121,17 +121,17 @@
         // Survey data structure
         const surveyData = {
             nodes: [
-                { id: 'A', x: 100, y: 100, name: 'Entrance', info: 'Main entrance shaft. Altitude: 1850m. First explored: 1987' },
-                { id: 'B', x: 200, y: 200, name: 'Junction 1', info: 'Major junction after initial pitches. Depth: -200m' },
-                { id: 'C', x: 350, y: 180, name: 'Camp Site', info: 'Underground camp location. Depth: -425m. Sandy ledge with water source' },
-                { id: 'D', x: 300, y: 350, name: 'Streamway', info: 'Active streamway passage. Width: 3-5m. Fast flowing water' },
+                { id: 'A', x: 100, y: 100, name: 'Primula Point', info: 'Camp' },
+                { id: 'B', x: 150, y: 150, name: 'Junction', info: '' },
+                { id: 'C', x: 200, y: 150, name: 'Postman Pat', info: 'vast, steeply sloping, boulder-filled chamber https://www.oucc.org.uk/expeditions/expedition1998/roadtoegbert.htm' },
+                { id: 'D', x: 150, y: 200, name: 'Streamway', info: 'Active streamway passage. Width: 3-5m. Fast flowing water' },
                 { id: 'E', x: 500, y: 300, name: 'Upstream Limit', info: 'Current upstream exploration limit. Deep water pool' },
                 { id: 'F', x: 450, y: 450, name: 'Choke', info: 'Boulder choke blocking passage. Multiple bypass attempts unsuccessful' },
                 { id: 'G', x: 150, y: 400, name: 'Side Passage', info: 'Fossil passage system. Dry route parallel to main stream' }
             ],
             lines: [
-                { from: 'A', to: 'B', name: 'Entrance Series', info: 'Series of vertical pitches. Length: 300m. Requires multiple rope lengths' },
-                { from: 'B', to: 'C', name: 'Main Route', info: 'Horizontal development. Length: 450m. Easy passage' },
+                { from: 'A', to: 'B', name: '', info: 'Beyond Primula Point, the stream deepens in a tall 6m wide passage, and the easiest route is to traverse along ledges on the left-hand wall. A four metre pitch, with an irritating take-off at the top, leads up to the first of these. An easy walk (line for safety) reaches a broader ledge, and then a tension traverse to another ledge. Here, two routes diverge. https://www.oucc.org.uk/expeditions/expedition1998/roadtoegbert.htm. ' },
+                { from: 'B', to: 'C', name: '', info: 'From the junction described above, a rope ascends on muddy walls past a ledge to a 3m diameter rocky chamber about 2m high. From here, a window looks down onto the start of Choke Druscilla. Traversing past this reaches another small sloping chamber. Upslope a narrow exit emerges into a vast, steeply sloping, boulder-filled chamber (Postman Pat).' },
                 { from: 'B', to: 'G', name: 'Side Branch', info: 'Tight rift passage. Length: 200m. Awkward climbs' },
                 { from: 'C', to: 'D', name: 'Camp Connection', info: 'Short pitch series. Length: 180m. Well rigged' },
                 { from: 'D', to: 'E', name: 'Upstream', info: 'Streamway passage. Length: 600m. Wade/swim sections' },
