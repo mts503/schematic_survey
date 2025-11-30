@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Survey Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        #container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        #canvas {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: grab;
+        }
+        
+        #canvas:active {
+            cursor: grabbing;
+        }
+        
+        .node {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .node:hover circle {
+            r: 12;
+            fill: #2563eb;
+        }
+        
+        .line {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .line:hover {
+            stroke-width: 4;
+            stroke: #2563eb;
+        }
+        
+        .node-label {
+            pointer-events: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        #info-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            min-height: 100px;
+            border-left: 4px solid #2563eb;
+        }
+        
+        #info-panel h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+        
+        #info-panel p {
+            margin: 5px 0;
+            color: #555;
+        }
+        
+        .controls {
+            margin-bottom: 15px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Interactive Survey Diagram</h1>
+        <div class="controls">
+            <button onclick="resetView()">Reset View</button>
+            <button onclick="clearSelection()">Clear Selection</button>
+        </div>
+        <svg id="canvas"></svg>
+        <div id="info-panel">
+            <h3>Information</h3>
+            <p>Click on any node or line to view details.</p>
+        </div>
+    </div>
+
+    <script>
+        // Survey data structure
+        const surveyData = {
+            nodes: [
+                { id: 'A', x: 100, y: 100, name: 'Entrance', info: 'Main entrance shaft. Altitude: 1850m. First explored: 1987' },
+                { id: 'B', x: 200, y: 200, name: 'Junction 1', info: 'Major junction after initial pitches. Depth: -200m' },
+                { id: 'C', x: 350, y: 180, name: 'Camp Site', info: 'Underground camp location. Depth: -425m. Sandy ledge with water source' },
+                { id: 'D', x: 300, y: 350, name: 'Streamway', info: 'Active streamway passage. Width: 3-5m. Fast flowing water' },
+                { id: 'E', x: 500, y: 300, name: 'Upstream Limit', info: 'Current upstream exploration limit. Deep water pool' },
+                { id: 'F', x: 450, y: 450, name: 'Choke', info: 'Boulder choke blocking passage. Multiple bypass attempts unsuccessful' },
+                { id: 'G', x: 150, y: 400, name: 'Side Passage', info: 'Fossil passage system. Dry route parallel to main stream' }
+            ],
+            lines: [
+                { from: 'A', to: 'B', name: 'Entrance Series', info: 'Series of vertical pitches. Length: 300m. Requires multiple rope lengths' },
+                { from: 'B', to: 'C', name: 'Main Route', info: 'Horizontal development. Length: 450m. Easy passage' },
+                { from: 'B', to: 'G', name: 'Side Branch', info: 'Tight rift passage. Length: 200m. Awkward climbs' },
+                { from: 'C', to: 'D', name: 'Camp Connection', info: 'Short pitch series. Length: 180m. Well rigged' },
+                { from: 'D', to: 'E', name: 'Upstream', info: 'Streamway passage. Length: 600m. Wade/swim sections' },
+                { from: 'D', to: 'F', name: 'Downstream', info: 'Main streamway. Length: 400m. Ends at choke' },
+                { from: 'G', to: 'D', name: 'Bypass Route', info: 'Alternative route avoiding waterfall. Length: 250m' }
+            ]
+        };
+
+        const svg = document.getElementById('canvas');
+        const infoPanel = document.getElementById('info-panel');
+        
+        let viewBox = { x: 0, y: 0, width: 600, height: 600 };
+        let isPanning = false;
+        let startPoint = { x: 0, y: 0 };
+        
+        // Set up SVG
+        svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+        
+        // Draw lines first (so they appear behind nodes)
+        surveyData.lines.forEach((line, index) => {
+            const fromNode = surveyData.nodes.find(n => n.id === line.from);
+            const toNode = surveyData.nodes.find(n => n.id === line.to);
+            
+            const lineElement = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            lineElement.setAttribute('x1', fromNode.x);
+            lineElement.setAttribute('y1', fromNode.y);
+            lineElement.setAttribute('x2', toNode.x);
+            lineElement.setAttribute('y2', toNode.y);
+            lineElement.setAttribute('stroke', '#666');
+            lineElement.setAttribute('stroke-width', '2');
+            lineElement.classList.add('line');
+            lineElement.setAttribute('data-index', index);
+            
+            lineElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showLineInfo(line);
+            });
+            
+            svg.appendChild(lineElement);
+        });
+        
+        // Draw nodes
+        surveyData.nodes.forEach((node, index) => {
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.classList.add('node');
+            g.setAttribute('data-index', index);
+            
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', node.x);
+            circle.setAttribute('cy', node.y);
+            circle.setAttribute('r', '8');
+            circle.setAttribute('fill', '#2563eb');
+            circle.setAttribute('stroke', 'white');
+            circle.setAttribute('stroke-width', '2');
+            
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', node.x);
+            text.setAttribute('y', node.y - 15);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('fill', '#333');
+            text.classList.add('node-label');
+            text.textContent = node.name;
+            
+            g.appendChild(circle);
+            g.appendChild(text);
+            
+            g.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showNodeInfo(node);
+            });
+            
+            svg.appendChild(g);
+        });
+        
+        function showNodeInfo(node) {
+            infoPanel.innerHTML = `
+                <h3>${node.name} (${node.id})</h3>
+                <p>${node.info}</p>
+            `;
+        }
+        
+        function showLineInfo(line) {
+            infoPanel.innerHTML = `
+                <h3>${line.name}</h3>
+                <p><strong>Connection:</strong> ${line.from} → ${line.to}</p>
+                <p>${line.info}</p>
+            `;
+        }
+        
+        function clearSelection() {
+            infoPanel.innerHTML = `
+                <h3>Information</h3>
+                <p>Click on any node or line to view details.</p>
+            `;
+        }
+        
+        // Panning functionality
+        svg.addEventListener('mousedown', (e) => {
+            isPanning = true;
+            startPoint = { x: e.clientX, y: e.clientY };
+        });
+        
+        svg.addEventListener('mousemove', (e) => {
+            if (!isPanning) return;
+            
+            const dx = (e.clientX - startPoint.x) * (viewBox.width / svg.clientWidth);
+            const dy = (e.clientY - startPoint.y) * (viewBox.height / svg.clientHeight);
+            
+            viewBox.x -= dx;
+            viewBox.y -= dy;
+            
+            svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+            
+            startPoint = { x: e.clientX, y: e.clientY };
+        });
+        
+        svg.addEventListener('mouseup', () => {
+            isPanning = false;
+        });
+        
+        svg.addEventListener('mouseleave', () => {
+            isPanning = false;
+        });
+        
+        // Zoom functionality
+        svg.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            
+            const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
+            const rect = svg.getBoundingClientRect();
+            const mouseX = ((e.clientX - rect.left) / rect.width) * viewBox.width + viewBox.x;
+            const mouseY = ((e.clientY - rect.top) / rect.height) * viewBox.height + viewBox.y;
+            
+            const newWidth = viewBox.width * zoomFactor;
+            const newHeight = viewBox.height * zoomFactor;
+            
+            viewBox.x = mouseX - (mouseX - viewBox.x) * (newWidth / viewBox.width);
+            viewBox.y = mouseY - (mouseY - viewBox.y) * (newHeight / viewBox.height);
+            viewBox.width = newWidth;
+            viewBox.height = newHeight;
+            
+            svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+        });
+        
+        function resetView() {
+            viewBox = { x: 0, y: 0, width: 600, height: 600 };
+            svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+        }
+    </script>
+</body>
+</html>
