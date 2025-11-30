@@ -121,30 +121,24 @@
         // Survey data structure
         const surveyData = {
             nodes: [
-                { id: 'A1', x: 100, y: 800, name: 'Just Awesome', info: '' },
-                { id: 'A3', x: 150, y: 750, name: 'Dead Or Alive', info: 'Dead or Alive (P40 up)	60m rope, 2 bolts; lots of deviations.' },
-                { id: 'A2', x: 200, y: 700, name: 'Euston Choke', info: 'This is a steep strenuous ascent up loosely packed sand and rocks, first up the right-hand side and then crossing over to the left (the descent is easier on the return). A handline is now rigged most of the way up. The last steep section may be avoided by heading to the right, and ducking under some large boulders. ' },
-                { id: 'A', x: 250, y: 650, name: 'Paddington Choke', info: 'Camp' },
-                { id: 'A1', x: 300, y: 600, name: "Zazudska Way", info: 'Short, oversuit-ripping squeezes and rifts open out at the top of a series of six short, awkward pitches. The last of these lands in the stream just before Primula Point.<br>1998 report"},
-
-                { id: 'A', x: 300, y: 600, name: 'Primula Point', info: 'Camp' },
-                { id: 'B', x: 350, y: 550, name: 'Junction', info: '' },
-                { id: 'B1', x: 350, y: 550, name: 'Choke Drucilla', info: ''},
-                { id: 'C', x: 200, y: 150, name: 'Postman Pat', info: 'vast, steeply sloping, boulder-filled chamber https://www.oucc.org.uk/expeditions/expedition1998/roadtoegbert.htm' },
-                { id: 'D', x: 150, y: 200, name: 'Streamway', info: 'Active streamway passage. Width: 3-5m. Fast flowing water' },
-                { id: 'E', x: 500, y: 300, name: 'Upstream Limit', info: 'Current upstream exploration limit. Deep water pool' },
-                { id: 'F', x: 450, y: 450, name: 'Choke', info: 'Boulder choke blocking passage. Multiple bypass attempts unsuccessful' },
-                { id: 'G', x: 150, y: 400, name: 'Side Passage', info: 'Fossil passage system. Dry route parallel to main stream' }
+                { id: 'A', x: 100, y: 800, name: 'Just Awesome', info: '' },
+                { id: 'B', x: 150, y: 750, name: 'Dead Or Alive', info: 'Dead or Alive (P40 up)	60m rope, 2 bolts; lots of deviations.' },
+                { id: 'C', x: 200, y: 700, name: 'Euston Choke', info: 'This is a steep strenuous ascent up loosely packed sand and rocks, first up the right-hand side and then crossing over to the left (the descent is easier on the return). A handline is now rigged most of the way up. The last steep section may be avoided by heading to the right, and ducking under some large boulders. ' },
+                { id: 'D', x: 250, y: 650, name: 'Paddington Choke', info: 'Camp' },
+                { id: 'E', x: 300, y: 600, name: "Zazudska Way", info: 'Short, oversuit-ripping squeezes and rifts open out at the top of a series of six short, awkward pitches. The last of these lands in the stream just before Primula Point.<br>1998 report"},
+                { id: 'F', x: 350, y: 550, name: 'Primula Point', info: 'Camp' },
+                { id: 'G', x: 400, y: 500, name: 'Junction', info: '' },
+                { id: 'G1', x: 450, y: 450, name: 'Choke Drucilla', info: ''},
+                { id: 'H', x: 400, y: 550, name: 'Postman Pat', info: 'vast, steeply sloping, boulder-filled chamber https://www.oucc.org.uk/expeditions/expedition1998/roadtoegbert.htm' },
+                { id: 'I', x: 150, y: 200, name: 'Streamway', info: 'Active streamway passage. Width: 3-5m. Fast flowing water' },
+                { id: 'J', x: 500, y: 300, name: 'Upstream Limit', info: 'Current upstream exploration limit. Deep water pool' },
+                { id: 'K', x: 450, y: 450, name: 'Choke', info: 'Boulder choke blocking passage. Multiple bypass attempts unsuccessful' },
+                { id: 'L', x: 150, y: 400, name: 'Side Passage', info: 'Fossil passage system. Dry route parallel to main stream' }
             ],
             lines: [
-                { from: 'A3', to: 'A2', name: 'London Underground', info: 'nearly a mile of huge passage, no roof and no walls, house sized boulders and a thin blue cord, marking the shortest or easiest route\n1998 report' },
-                { from: 'A', to: 'B', name: '', info: 'Beyond Primula Point, the stream deepens in a tall 6m wide passage, and the easiest route is to traverse along ledges on the left-hand wall. A four metre pitch, with an irritating take-off at the top, leads up to the first of these. An easy walk (line for safety) reaches a broader ledge, and then a tension traverse to another ledge. Here, two routes diverge. https://www.oucc.org.uk/expeditions/expedition1998/roadtoegbert.htm. ' },
-                { from: 'B', to: 'C', name: '', info: 'From the junction described above, a rope ascends on muddy walls past a ledge to a 3m diameter rocky chamber about 2m high. From here, a window looks down onto the start of Choke Druscilla. Traversing past this reaches another small sloping chamber. Upslope a narrow exit emerges into a vast, steeply sloping, boulder-filled chamber (Postman Pat).' },
-                { from: 'B', to: 'G', name: 'Side Branch', info: 'Tight rift passage. Length: 200m. Awkward climbs' },
-                { from: 'C', to: 'D', name: 'Camp Connection', info: 'Short pitch series. Length: 180m. Well rigged' },
-                { from: 'D', to: 'E', name: 'Upstream', info: 'Streamway passage. Length: 600m. Wade/swim sections' },
-                { from: 'D', to: 'F', name: 'Downstream', info: 'Main streamway. Length: 400m. Ends at choke' },
-                { from: 'G', to: 'D', name: 'Bypass Route', info: 'Alternative route avoiding waterfall. Length: 250m' }
+                { from: 'A', to: 'B', name: 'London Underground', info: 'nearly a mile of huge passage, no roof and no walls, house sized boulders and a thin blue cord, marking the shortest or easiest route\n1998 report' },
+                { from: 'F', to: 'G', name: '', info: 'Beyond Primula Point, the stream deepens in a tall 6m wide passage, and the easiest route is to traverse along ledges on the left-hand wall. A four metre pitch, with an irritating take-off at the top, leads up to the first of these. An easy walk (line for safety) reaches a broader ledge, and then a tension traverse to another ledge. Here, two routes diverge. https://www.oucc.org.uk/expeditions/expedition1998/roadtoegbert.htm. ' },
+                { from: 'G', to: 'H', name: '', info: 'From the junction described above, a rope ascends on muddy walls past a ledge to a 3m diameter rocky chamber about 2m high. From here, a window looks down onto the start of Choke Druscilla. Traversing past this reaches another small sloping chamber. Upslope a narrow exit emerges into a vast, steeply sloping, boulder-filled chamber (Postman Pat).' }
             ]
         };
 
